@@ -1,4 +1,6 @@
 #include "serverheader.h"
+#include <fstream>
+#include <iterator>
 
 using namespace std; 
 
@@ -31,20 +33,37 @@ int main() {
     ssize_t secondSpace = requestString.find(" ", firstSpace+1);
     string path = requestString.substr(firstSpace+1, secondSpace-firstSpace-1);
 
+    ifstream file("index.html");
+    if(file.is_open()) { 
+        cout<<"index.html file opened successfully."<<endl;
+    }else {
+        cout<<"Failed to open index.html file."<<endl;
+    }
+
+    string content = string(
+        istreambuf_iterator<char>(file),
+        istreambuf_iterator<char>()
+    );
+
     if(method == "GET" && path == "/") { 
         cout<<"GET request received for /"<<endl;
+        string response = 
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/html\r\n"
+            "\r\n"; 
+           response += content; 
+            cout<<"\nSending response back to the client for GET and index path."<<endl;
+        ssize_t sentData =  send(connAccept,response.c_str(), response.size(), 0);
+        if(sentData == -1) { 
+            perror("Sending response failed.");
+        }else{ 
+            cout<<"Response sent sucessfully."<<endl;
+        }
     }else if(method == "GET" && path != "/") {
         cout<<"GET request received for "<<path<<endl;
     }
     
-    cout<<"\nSending response back to the client."<<endl;
-    char response[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Hello, World!</h1></body></html>";
-    ssize_t sentData =  send(connAccept,response, sizeof(response), 0);
-    if(sentData == -1) { 
-        perror("Sending response failed.");
-    }else{ 
-        cout<<"Response sent sucessfully."<<endl;
-    }
+    
 
     //if get request with no path, default to index.html
     //Then load the index.HTML into the memory and store its content. 
