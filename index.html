@@ -1,13 +1,515 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+```
+<title>Biraj — Developer</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #080808;
+        color: #e8e8e8;
+        font-family: "Space Grotesk", sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* Background */
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+    body::after {
+        content: "";
+        position: fixed;
+        width: 500px;
+        height: 500px;
+        top: -200px;
+        right: -150px;
+        background: #00ff8840;
+        filter: blur(150px);
+        border-radius: 50%;
+        z-index: -1;
+    }
+
+    .container {
+        width: min(1100px, 90%);
+        margin: auto;
+    }
+
+    /* Navigation */
+
+    nav {
+        height: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #222;
+    }
+
+    .logo {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .logo span {
+        color: #00ff88;
+    }
+
+    nav a {
+        color: #888;
+        text-decoration: none;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        margin-left: 30px;
+        transition: 0.2s;
+    }
+
+    nav a:hover {
+        color: #00ff88;
+    }
+
+    /* Hero */
+
+    .hero {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .terminal {
+        font-family: "JetBrains Mono", monospace;
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .terminal span {
+        color: #00ff88;
+    }
+
+    .hero h1 {
+        font-size: clamp(55px, 9vw, 105px);
+        line-height: 0.95;
+        letter-spacing: -5px;
+        max-width: 900px;
+    }
+
+    .hero h1 .accent {
+        color: #00ff88;
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 0.8em;
+        background: #00ff88;
+        margin-left: 8px;
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    .hero-description {
+        max-width: 650px;
+        margin-top: 35px;
+        color: #888;
+        font-size: 18px;
+        line-height: 1.8;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 35px;
+    }
+
+    .button {
+        padding: 13px 20px;
+        border: 1px solid #333;
+        color: white;
+        text-decoration: none;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        transition: 0.2s;
+    }
+
+    .button.primary {
+        background: #00ff88;
+        color: #000;
+        border-color: #00ff88;
+    }
+
+    .button:hover {
+        transform: translateY(-3px);
+        border-color: #00ff88;
+    }
+
+    /* Sections */
+
+    section {
+        padding: 110px 0;
+        border-top: 1px solid #222;
+    }
+
+    .section-number {
+        font-family: "JetBrains Mono", monospace;
+        color: #00ff88;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    section h2 {
+        font-size: 45px;
+        letter-spacing: -2px;
+        margin-bottom: 25px;
+    }
+
+    section > p {
+        max-width: 700px;
+        color: #888;
+        line-height: 1.8;
+        font-size: 17px;
+    }
+
+    /* Skills */
+
+    .skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .skill {
+        padding: 10px 15px;
+        border: 1px solid #292929;
+        background: #0d0d0d;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        color: #aaa;
+        transition: 0.2s;
+    }
+
+    .skill:hover {
+        color: #00ff88;
+        border-color: #00ff88;
+        transform: translateY(-2px);
+    }
+
+    /* Projects */
+
+    .projects {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 40px;
+    }
+
+    .project {
+        position: relative;
+        padding: 30px;
+        min-height: 220px;
+        background: #0d0d0d;
+        border: 1px solid #222;
+        transition: 0.3s;
+        overflow: hidden;
+    }
+
+    .project::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 0;
+        background: #00ff88;
+        transition: 0.3s;
+    }
+
+    .project:hover {
+        border-color: #444;
+        transform: translateY(-5px);
+    }
+
+    .project:hover::before {
+        height: 100%;
+    }
+
+    .project-number {
+        font-family: "JetBrains Mono", monospace;
+        color: #444;
+        font-size: 12px;
+    }
+
+    .project h3 {
+        font-size: 25px;
+        margin: 35px 0 12px;
+    }
+
+    .project p {
+        color: #777;
+        line-height: 1.7;
+        font-size: 14px;
+    }
+
+    /* Contact */
+
+    .contact {
+        text-align: center;
+        padding: 150px 0;
+    }
+
+    .contact h2 {
+        font-size: clamp(45px, 7vw, 80px);
+    }
+
+    .contact p {
+        margin: 20px auto 35px;
+    }
+
+    /* Footer */
+
+    footer {
+        border-top: 1px solid #222;
+        padding: 30px 0;
+        display: flex;
+        justify-content: space-between;
+        color: #555;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 700px) {
+
+        nav {
+            height: 75px;
+        }
+
+        nav a {
+            margin-left: 10px;
+            font-size: 11px;
+        }
+
+        .hero h1 {
+            letter-spacing: -3px;
+        }
+
+        .projects {
+            grid-template-columns: 1fr;
+        }
+
+        section h2 {
+            font-size: 35px;
+        }
+
+        .buttons {
+            flex-direction: column;
+            width: fit-content;
+        }
+
+        footer {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+</style>
+```
+
 </head>
+
 <body>
 
-<h2> Hello from the index file</h2>
-    
+```
+<div class="container">
+
+    <nav>
+        <div class="logo">biraj<span>.</span></div>
+
+        <div>
+            <a href="#about">about</a>
+            <a href="#work">work</a>
+            <a href="#contact">contact</a>
+        </div>
+    </nav>
+
+    <main>
+
+        <section class="hero">
+
+            <div>
+
+                <div class="terminal">
+                    <span>~/biraj</span> $ whoami
+                </div>
+
+                <h1>
+                    Biraj<br>
+                    <span class="accent">Shrestha.</span><span class="cursor"></span>
+                </h1>
+
+                <p class="hero-description">
+                    Software developer interested in backend systems,
+                    networking, and building things from the ground up.
+                </p>
+
+                <div class="buttons">
+                    <a href="#work" class="button primary">
+                        ./view-work
+                    </a>
+
+                    <a href="#contact" class="button">
+                        ./contact
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="about">
+
+            <div class="section-number">01 / about</div>
+
+            <h2>Behind the code.</h2>
+
+            <p>
+                I'm a software developer who likes understanding what
+                happens beneath the abstractions. I work across web
+                development, databases, backend systems, and lower-level
+                programming.
+            </p>
+
+            <div class="skills">
+                <div class="skill">C++</div>
+                <div class="skill">Java</div>
+                <div class="skill">PHP</div>
+                <div class="skill">JavaScript</div>
+                <div class="skill">SQL</div>
+                <div class="skill">MySQL</div>
+                <div class="skill">PostgreSQL</div>
+                <div class="skill">React</div>
+                <div class="skill">Spring Boot</div>
+                <div class="skill">Git</div>
+            </div>
+
+        </section>
+
+
+        <section id="work">
+
+            <div class="section-number">02 / work</div>
+
+            <h2>Things I've built.</h2>
+
+            <div class="projects">
+
+                <div class="project">
+                    <div class="project-number">01</div>
+
+                    <h3>C++ HTTP Server</h3>
+
+                    <p>
+                        Building an HTTP server from scratch to understand
+                        sockets, TCP connections, HTTP request parsing,
+                        and serving files.
+                    </p>
+                </div>
+
+                <div class="project">
+                    <div class="project-number">02</div>
+
+                    <h3>Stress Management</h3>
+
+                    <p>
+                        Full-stack application built with React, Node.js,
+                        and PostgreSQL for tracking moods and stress.
+                    </p>
+                </div>
+
+                <div class="project">
+                    <div class="project-number">03</div>
+
+                    <h3>Student Management</h3>
+
+                    <p>
+                        CRUD application built using Spring Boot and
+                        MySQL for managing student information.
+                    </p>
+                </div>
+
+                <div class="project">
+                    <div class="project-number">04</div>
+
+                    <h3>Security Project</h3>
+
+                    <p>
+                        Secure remote-access VPN implementation with
+                        multi-factor authentication.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="contact" class="contact">
+
+            <div class="section-number">03 / contact</div>
+
+            <h2>Let's build something.</h2>
+
+            <p>
+                Interested in working together or talking tech?
+            </p>
+
+            <a href="mailto:" class="button primary">
+                say hello →
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <span>biraj.shrestha</span>
+        <span>© 2026</span>
+    </footer>
+
+</div>
+```
+
 </body>
 </html>

@@ -6,6 +6,8 @@
 #include <iostream>
 //library for listening to requests. 
 #include <unistd.h>
+#include <queue>
+
 
 using namespace std; 
 
@@ -30,8 +32,10 @@ int bindPort(int port, int serverSocket) {
 
     if(bind(serverSocket, (struct sockaddr*)&address, sizeof(address)) == -1) { 
         perror("Binding failed.");
+        return -1; 
     }else { 
-        cout<<"Binding successful."<<endl;  
+        cout<<"Binding successful."<<endl;
+        return 0;  
     }; 
 }
 
@@ -48,9 +52,9 @@ int acceptConnection(int serverSocket, struct sockaddr_in address) {
     socklen_t addrlen = sizeof(address);
     int connAccept = accept( serverSocket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
     if(connAccept   == -1) { 
-        perror("Accepting connection failed.");
+        perror("Accepting connection failed.\n");
     }else {
-        cout<<"Connection accepted."<<endl;
+        cout<<"Connection accepted.\n"<<endl;
         return connAccept;
     } 
 }
@@ -64,5 +68,16 @@ int readFromSocket(int connAccept, char* buffer, size_t bufferSize) {
         return bytesRead;
     }
 }
+
+queue<string> getPath(string path) { 
+    queue<string>slicePath; 
+    while(string::npos != path.find("/")) { 
+        ssize_t start = path.find("/");  
+        ssize_t end = path.find("/", start+1); 
+        slicePath.push(path.substr(start+1, end-start-1));
+        path.erase(start, end-start-1);
+    }; 
+    return slicePath; 
+} 
 
 #endif
