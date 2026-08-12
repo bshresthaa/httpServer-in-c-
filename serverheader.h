@@ -7,6 +7,8 @@
 //library for listening to requests. 
 #include <unistd.h>
 #include <queue>
+#include <string>
+#include <sstream>
 
 
 using namespace std; 
@@ -69,15 +71,22 @@ int readFromSocket(int connAccept, char* buffer, size_t bufferSize) {
     }
 }
 
+//Might not even need this function. 
 queue<string> getPath(string path) { 
     queue<string>slicePath; 
-    while(string::npos != path.find("/")) { 
-        ssize_t start = path.find("/");  
-        ssize_t end = path.find("/", start+1); 
-        slicePath.push(path.substr(start+1, end-start-1));
-        path.erase(start, end-start-1);
-    }; 
-    return slicePath; 
+    string placeHolder; 
+    // while(string::npos != path.find("/")) { 
+    //     ssize_t start = path.find("/");  
+    //     ssize_t end = path.find("/", start+1); 
+    //     slicePath.push(path.substr(start+1, end-start-1));
+    //     path.erase(start, end-start-1);
+    // }; 
+    // return slicePath; 
+    stringstream pathStream(path); 
+    while(getline(pathStream, placeHolder, '/' )) { 
+        slicePath.push(placeHolder); 
+    }
+    return slicePath;
 } 
 
 #endif
