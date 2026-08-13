@@ -32,7 +32,7 @@ int bindPort(int port, int serverSocket) {
     address.sin_port = htons(port);
     address.sin_addr.s_addr = INADDR_ANY;
 
-    if(bind(serverSocket, (struct sockaddr*)&address, sizeof(address)) == -1) { 
+    if(::bind(serverSocket, (struct sockaddr*)&address, sizeof(address)) == -1) { 
         perror("Binding failed.");
         return -1; 
     }else { 

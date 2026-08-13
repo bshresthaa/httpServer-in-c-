@@ -1,12 +1,17 @@
 #include "serverheader.h"
 #include <fstream>
 #include <iterator>
+#include <thread>
 
 using namespace std; 
 
+const string response = 
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/html\r\n"
+                "\r\n"; 
 
 void handleClient(int connAccept) { 
-        sleep(10); 
+    sleep(10); 
         char buffer[1024] = {0};
         ssize_t bytesRead = readFromSocket(connAccept, buffer, sizeof(buffer));
 
@@ -33,13 +38,10 @@ void handleClient(int connAccept) {
                 istreambuf_iterator<char>(file),
                 istreambuf_iterator<char>()
             );
-            string response = 
-                "HTTP/1.1 200 OK\r\n"
-                "Content-Type: text/html\r\n"
-                "\r\n"; 
-            response += content; 
+            string fileResponse = response; 
+            fileResponse += content; 
                 cout<<"\nSending response back to the client for GET and index path."<<endl;
-            ssize_t sentData =  send(connAccept,response.c_str(), response.size(), 0);
+            ssize_t sentData =  send(connAccept,fileResponse.c_str(), fileResponse.size(), 0);
             if(sentData == -1) { 
                 perror("Sending response failed.");
             }else{ 
@@ -54,13 +56,10 @@ void handleClient(int connAccept) {
                 istreambuf_iterator<char>()
             );
 
-            string response = 
-                            "HTTP/1.1 200 OK\r\n"
-                            "Content-Type: text/html\r\n"
-                            "\r\n"; 
-            response += fileContent; 
+            string fileResponse = response;
+            fileResponse += fileContent; 
             cout<<"\nSending response back to the client for GET and file path."<<endl;
-            ssize_t sentData =  send(connAccept,response.c_str(), response.size(), 0);
+            ssize_t sentData =  send(connAccept,fileResponse.c_str(), fileResponse.size(), 0);
             if(sentData == -1) { 
                 perror("Sending response failed.");
             }else{ 
@@ -71,7 +70,7 @@ void handleClient(int connAccept) {
         close(connAccept);
 }
 
-int main() {
+int main() { 
     //Creating a socket
     int sockAddr = serverSocket(); 
 
@@ -84,6 +83,7 @@ int main() {
     int listener = openListener(sockAddr, queueSize, port);
     cout<<"Waiting for incoming connections..."<<endl;
 
+    int i = 0; 
     while(true) {
         //Acceopting connection
         sockaddr_in address;    
@@ -94,7 +94,10 @@ int main() {
             continue; // Skip to the next iteration of the loop
         }
         cout << "Connection accepted: " << connAccept << endl;
-        handleClient(connAccept);       
+        thread clientThread(handleClient, connAccept); //Concurrent connection with threads. 
+        cout<<"Thread created for connection: "<< i <<"th connection." <<endl;
+        ++i; 
+        clientThread.detach(); // Detach the thread to allow it to run independently
     }; 
 
     close(sockAddr); 
